@@ -11,7 +11,7 @@ export default function HomeScreen() {
   const { activeFeed } = useHomeFeed();
   const { posts, onFollow, onLike, onComment, onMenuAction } = usePosts();
 
-  const feedPosts = activeFeed === 'Amigos' ? posts : [];
+  const feedPosts = posts.filter((post) => post.feeds.includes(activeFeed));
 
   const renderItem: ListRenderItem<Post> = ({ item }) => (
     <PostCard

@@ -1,3 +1,5 @@
+import { HomeFeed } from '@/context/home/feed-context';
+
 export type Post = {
   id: string;
   authorName: string;
@@ -9,6 +11,7 @@ export type Post = {
   likeCount: number;
   commentCount: number;
   comments: PostComment[];
+  feeds: HomeFeed[];
 };
 
 export type PostComment = {

@@ -7,6 +7,7 @@ const INITIAL_POSTS: Post[] = [
     id: 'markos',
     authorName: 'MarkOS',
     timeAgo: 'Há 2 dias',
+    feeds: ['Ginásio'],
     following: false,
     liked: false,
     images: [
@@ -28,6 +29,7 @@ const INITIAL_POSTS: Post[] = [
     id: 'quinn',
     authorName: 'Quinn Choi',
     timeAgo: 'Há 2 dias',
+    feeds: ['Amigos', 'Ginásio'],
     following: true,
     liked: false,
     images: [
