@@ -2,14 +2,26 @@ import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import { Text } from '@/components/ui/text';
 import { useThemeColors } from '@/lib/theme';
+import { Icon } from '@expo/ui';
+import { MenuView } from '@expo/ui/community/menu';
 import { Ionicons } from '@expo/vector-icons';
 import { View } from 'react-native';
+import type { PostHeaderProps, PostMenuAction } from './types';
 
-type PostHeaderProps = {
-  authorName: string;
-  timeAgo: string;
-  onMenuPress?: () => void;
-};
+const shareIcon = Icon.select({
+  ios: 'square.and.arrow.up',
+  android: import('@expo/material-symbols/share.xml'),
+});
+
+const unfollowIcon = Icon.select({
+  ios: 'person.badge.minus',
+  android: import('@expo/material-symbols/person_remove.xml'),
+});
+
+const reportIcon = Icon.select({
+  ios: 'flag',
+  android: import('@expo/material-symbols/flag.xml'),
+});
 
 const getInitials = (name: string) =>
   name
@@ -20,7 +32,13 @@ const getInitials = (name: string) =>
     .slice(0, 2)
     .toUpperCase();
 
-export const PostHeader = ({ authorName, timeAgo, onMenuPress }: PostHeaderProps) => {
+export const PostHeader = ({
+  authorName,
+  timeAgo,
+  following,
+  onFollow,
+  onMenuAction,
+}: PostHeaderProps) => {
   const { mutedForeground } = useThemeColors();
 
   return (
@@ -31,21 +49,51 @@ export const PostHeader = ({ authorName, timeAgo, onMenuPress }: PostHeaderProps
         </AvatarFallback>
       </Avatar>
 
-      <View className="flex-1">
-        <Text className="text-lg font-semibold leading-7" numberOfLines={1}>
-          {authorName}
-        </Text>
-        <Text className="text-muted-foreground">{timeAgo}</Text>
+      <View className="flex-1 flex-row items-center gap-3">
+        <View className="shrink">
+          <Text className="text-lg font-semibold leading-7" numberOfLines={1}>
+            {authorName}
+          </Text>
+          <Text className="text-muted-foreground">{timeAgo}</Text>
+        </View>
+
+        {!following && (
+          <Button
+            size="sm"
+            variant="secondary"
+            className="rounded-full px-4"
+            accessibilityLabel={`Seguir ${authorName}`}
+            onPress={onFollow}>
+            <Text className="text-sm font-semibold">Seguir</Text>
+          </Button>
+        )}
       </View>
 
-      <Button
-        variant="ghost"
-        size="icon"
-        className="rounded-full"
-        accessibilityLabel="Mais opções"
-        onPress={onMenuPress}>
-        <Ionicons name="ellipsis-horizontal" size={24} color={mutedForeground} />
-      </Button>
+      <MenuView
+        actions={[
+          { id: 'share', title: 'Partilhar publicação', image: shareIcon },
+          {
+            id: 'unfollow',
+            title: 'Deixar de seguir',
+            image: unfollowIcon,
+            attributes: { hidden: !following },
+          },
+          {
+            id: 'report',
+            title: 'Denunciar',
+            image: reportIcon,
+            attributes: { destructive: true },
+          },
+        ]}
+        onPressAction={(e) => onMenuAction(e.nativeEvent.event as PostMenuAction)}>
+        <View
+          accessible
+          accessibilityRole="button"
+          accessibilityLabel="Mais opções"
+          className="h-10 w-10 items-center justify-center rounded-full">
+          <Ionicons name="ellipsis-horizontal" size={24} color={mutedForeground} />
+        </View>
+      </MenuView>
     </View>
   );
 };

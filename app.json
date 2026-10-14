@@ -20,12 +20,15 @@
         }
       ],
       "expo-router",
-      "expo-status-bar"
+      "expo-status-bar",
+      "expo-image"
     ],
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
-    "assetBundlePatterns": ["**/*"],
+    "assetBundlePatterns": [
+      "**/*"
+    ],
     "ios": {
       "supportsTablet": true,
       "userInterfaceStyle": "automatic"

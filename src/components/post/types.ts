@@ -1,4 +1,15 @@
-import type { ImageSourcePropType } from 'react-native';
+export type Post = {
+  id: string;
+  authorName: string;
+  timeAgo: string;
+  images: string[];
+  imageAlts: string[];
+  following: boolean;
+  liked: boolean;
+  likeCount: number;
+  commentCount: number;
+  comments: PostComment[];
+};
 
 export type PostComment = {
   id: string;
@@ -6,30 +17,28 @@ export type PostComment = {
   text: string;
 };
 
-export type Post = {
-  id: string;
+export type PostMenuAction = 'share' | 'unfollow' | 'report';
+
+export type PostHeaderProps = {
   authorName: string;
   timeAgo: string;
-  images: ImageSourcePropType[];
-  imageAlts?: string[];
-  likeCount?: number;
-  commentCount?: number;
-  comments?: PostComment[];
+  following: boolean;
+  onFollow: () => void;
+  onMenuAction: (action: PostMenuAction) => void;
 };
 
-export type PostActionHandlers = {
-  onLike?: (postId: string, liked: boolean) => void;
-  onComment?: (postId: string) => void;
-  onShare?: (postId: string) => void;
-  onSave?: (postId: string, saved: boolean) => void;
+export type PostActionBarProps = {
+  liked: boolean;
+  likeCount: number;
+  commentCount: number;
+  onLike: () => void;
+  onComment: () => void;
 };
 
-export type PostCardProps = PostActionHandlers & {
+export type PostCardProps = {
   post: Post;
-};
-
-export type PostActionBarProps = PostActionHandlers & {
-  postId: Post['id'];
-  likeCount?: number;
-  commentCount?: number;
+  onLike: (postId: string) => void;
+  onComment: (postId: string) => void;
+  onFollow: (postId: string) => void;
+  onMenuAction: (postId: string, action: PostMenuAction) => void;
 };

@@ -1,51 +1,48 @@
-import { Text } from '@/components/ui/text';
-import type { Post } from '@/components/post/types';
-import { ScrollView, View } from 'react-native';
+import { useCallback } from 'react';
+import { FlatList, View, type ListRenderItem } from 'react-native';
 import { PostCard } from '@/components/post/post-card';
+import type { Post } from '@/components/post/types';
+import { Text } from '@/components/ui/text';
 import { useHomeFeed } from '@/context/home/feed-context';
+import { usePosts } from '@/hook/use-posts';
 
-const airportPhoto = require('../../../../assets/feed-post-airport-gate.jpg');
-const terminalPhoto = require('../../../../assets/feed-post-airport-pexels.jpg');
-
-const posts: Post[] = [
-  {
-    id: 'markos',
-    authorName: 'MarkOS',
-    timeAgo: 'Há 2 dias',
-    images: [airportPhoto, terminalPhoto],
-    imageAlts: [
-      'Avião na pista visto através da janela do terminal.',
-      'Passageiros à espera junto à janela do terminal.',
-    ],
-  },
-  {
-    id: 'quinn',
-    authorName: 'Quinn Choi',
-    timeAgo: 'Há 2 dias',
-    images: [terminalPhoto, airportPhoto],
-    imageAlts: [
-      'Passageiros à espera junto à janela do terminal.',
-      'Avião na pista visto através da janela do terminal.',
-    ],
-  },
-];
+const PostSeparator = () => <View className="h-5" />;
 
 export default function HomeScreen() {
   const { activeFeed } = useHomeFeed();
+  const { posts, onFollow, onLike, onComment, onMenuAction } = usePosts();
+
+  const feedPosts = activeFeed === 'Amigos' ? posts : [];
+
+  const renderItem: ListRenderItem<Post> = useCallback(
+    ({ item }) => (
+      <PostCard
+        post={item}
+        onFollow={onFollow}
+        onLike={onLike}
+        onComment={onComment}
+        onMenuAction={onMenuAction}
+      />
+    ),
+    [onFollow, onLike, onComment, onMenuAction]
+  );
 
   return (
     <View className="flex-1">
-      <ScrollView className="flex-1" contentContainerStyle={{ paddingBottom: 24 }}>
-        <View className="gap-5">
-          {activeFeed === 'Amigos' ? (
-            posts.map((post) => <PostCard key={post.id} post={post} />)
-          ) : (
-            <Text className="text-center text-muted-foreground">
-              Ainda não há publicações no feed do Ginásio.
-            </Text>
-          )}
-        </View>
-      </ScrollView>
+      <FlatList
+        data={feedPosts}
+        keyExtractor={(item) => item.id}
+        renderItem={renderItem}
+        contentContainerStyle={{ paddingBottom: 24 }}
+        ItemSeparatorComponent={PostSeparator}
+        ListEmptyComponent={
+          <Text className="mt-6 text-center text-muted-foreground">
+            {activeFeed === 'Ginásio'
+              ? 'Ainda não há publicações no feed do Ginásio.'
+              : 'Ainda não há publicações de amigos.'}
+          </Text>
+        }
+      />
     </View>
   );
 }

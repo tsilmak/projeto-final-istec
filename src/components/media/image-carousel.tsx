@@ -1,8 +1,9 @@
 import { useState } from 'react';
-import { FlatList, Image, View, type ImageSourcePropType } from 'react-native';
+import { FlatList, View, type NativeScrollEvent, type NativeSyntheticEvent } from 'react-native';
+import { Image } from 'expo-image';
 
 type Props = {
-  images: ImageSourcePropType[];
+  images: string[];
   imageAlts?: string[];
 };
 
@@ -11,6 +12,11 @@ export const ImageCarousel = ({ images, imageAlts }: Props) => {
   const [width, setWidth] = useState(0);
 
   if (!images.length) return null;
+
+  const onScroll = (e: NativeSyntheticEvent<NativeScrollEvent>) => {
+    const next = Math.round(e.nativeEvent.contentOffset.x / width);
+    setIndex(Math.max(0, Math.min(images.length - 1, next)));
+  };
 
   return (
     <View className="w-full">
@@ -23,18 +29,16 @@ export const ImageCarousel = ({ images, imageAlts }: Props) => {
             horizontal
             pagingEnabled
             showsHorizontalScrollIndicator={false}
-            getItemLayout={(_, i) => ({ length: width, offset: width * i, index: i })}
-            onScroll={(e) => {
-              const next = Math.round(e.nativeEvent.contentOffset.x / width);
-              setIndex(Math.max(0, Math.min(images.length - 1, next)));
-            }}
+            onScroll={onScroll}
+            scrollEventThrottle={16}
             keyExtractor={(_, i) => String(i)}
             renderItem={({ item, index: i }) => (
               <Image
                 source={item}
                 accessibilityLabel={imageAlts?.[i] ?? `Imagem ${i + 1}`}
                 style={{ width, height: '100%' }}
-                resizeMode="cover"
+                contentFit="cover"
+                transition={150}
               />
             )}
           />
@@ -43,8 +47,9 @@ export const ImageCarousel = ({ images, imageAlts }: Props) => {
 
       {images.length > 1 && (
         <View
-          className="flex-row justify-center gap-1.5 py-2"
-          accessibilityLabel={`Imagem ${index + 1} de ${images.length}`}>
+          accessible
+          accessibilityLabel={`Imagem ${index + 1} de ${images.length}`}
+          className="flex-row justify-center gap-1.5 py-2">
           {images.map((_, i) => (
             <View
               key={i}

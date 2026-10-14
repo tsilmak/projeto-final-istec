@@ -1,25 +1,22 @@
 import { Card, CardFooter, CardHeader } from '@/components/ui/card';
 import { View } from 'react-native';
+import { ImageCarousel } from '../media/image-carousel';
 import { PostActionBar } from './post-action-bar';
 import { PostCommentsPreview } from './post-comments-preview';
-import type { PostCardProps, PostComment } from './types';
-import { ImageCarousel } from '../media/image-carousel';
 import { PostHeader } from './post-header';
+import type { PostCardProps } from './types';
 
-const MOCK_COMMENTS: PostComment[] = [
-  { id: '1', author: 'ana.silva', text: 'Wow! 😍' },
-  { id: '2', author: 'joao_m', text: 'Texto ' },
-];
-
-export const PostCard = ({ post, onLike, onComment, onShare, onSave }: PostCardProps) => {
-  const comments = post.comments ?? MOCK_COMMENTS;
-  const commentCount = post.commentCount ?? (post.comments ? comments.length : 12);
-  const likeCount = post.likeCount ?? 24;
-
+export const PostCard = ({ post, onLike, onComment, onFollow, onMenuAction }: PostCardProps) => {
   return (
     <Card className="gap-0 p-0">
       <CardHeader className="px-0">
-        <PostHeader authorName={post.authorName} timeAgo={post.timeAgo} />
+        <PostHeader
+          authorName={post.authorName}
+          timeAgo={post.timeAgo}
+          following={post.following}
+          onFollow={() => onFollow(post.id)}
+          onMenuAction={(action) => onMenuAction(post.id, action)}
+        />
       </CardHeader>
 
       <ImageCarousel images={post.images} imageAlts={post.imageAlts} />
@@ -27,18 +24,16 @@ export const PostCard = ({ post, onLike, onComment, onShare, onSave }: PostCardP
       <CardFooter className="border-t border-border px-4 py-2">
         <View className="w-full gap-2">
           <PostActionBar
-            postId={post.id}
-            likeCount={likeCount}
-            commentCount={commentCount}
-            onLike={onLike}
-            onComment={onComment}
-            onShare={onShare}
-            onSave={onSave}
+            liked={post.liked}
+            likeCount={post.likeCount}
+            commentCount={post.commentCount}
+            onLike={() => onLike(post.id)}
+            onComment={() => onComment(post.id)}
           />
           <PostCommentsPreview
-            comments={comments}
-            totalCount={commentCount}
-            onViewAll={() => onComment?.(post.id)}
+            comments={post.comments}
+            totalCount={post.commentCount}
+            onViewAll={() => onComment(post.id)}
           />
         </View>
       </CardFooter>

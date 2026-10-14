@@ -1,19 +1,19 @@
-import { useState, type ComponentProps } from 'react';
+import type { ComponentProps } from 'react';
 import { Ionicons } from '@expo/vector-icons';
 import { Text, View } from 'react-native';
 import { useThemeColors } from '@/lib/theme';
 import { Button } from '../ui/button';
 import type { PostActionBarProps } from './types';
 
-type PostIconButtonProps = {
+type ActionButtonProps = {
   name: ComponentProps<typeof Ionicons>['name'];
   label: string;
   color: string;
-  onPress: () => void;
   count: number;
+  onPress: () => void;
 };
 
-const PostActionButton = ({ name, label, color, onPress, count }: PostIconButtonProps) => (
+const ActionButton = ({ name, label, color, count, onPress }: ActionButtonProps) => (
   <View className="flex-row items-center">
     <Button
       variant="ghost"
@@ -30,36 +30,30 @@ const PostActionButton = ({ name, label, color, onPress, count }: PostIconButton
 );
 
 export const PostActionBar = ({
-  postId,
-  likeCount = 0,
-  commentCount = 0,
+  liked,
+  likeCount,
+  commentCount,
   onLike,
   onComment,
 }: PostActionBarProps) => {
   const { like, mutedForeground } = useThemeColors();
-  const [liked, setLiked] = useState(false);
 
   return (
-    <View className="w-full flex-row">
-      <View className="flex-row gap-1.5">
-        <PostActionButton
-          name={liked ? 'heart' : 'heart-outline'}
-          label={liked ? 'Retirar gosto' : 'Gosto'}
-          color={liked ? like : mutedForeground}
-          count={likeCount + (liked ? 1 : 0)}
-          onPress={() => {
-            setLiked(!liked);
-            onLike?.(postId, !liked);
-          }}
-        />
-        <PostActionButton
-          name="chatbubble-outline"
-          label="Comentários"
-          color={mutedForeground}
-          count={commentCount}
-          onPress={() => onComment?.(postId)}
-        />
-      </View>
+    <View className="-ml-2 flex-row gap-1.5">
+      <ActionButton
+        name={liked ? 'heart' : 'heart-outline'}
+        label={liked ? 'Retirar gosto' : 'Gosto'}
+        color={liked ? like : mutedForeground}
+        count={likeCount}
+        onPress={onLike}
+      />
+      <ActionButton
+        name="chatbubble-outline"
+        label="Comentários"
+        color={mutedForeground}
+        count={commentCount}
+        onPress={onComment}
+      />
     </View>
   );
 };
