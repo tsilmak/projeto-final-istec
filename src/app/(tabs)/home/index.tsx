@@ -1,4 +1,3 @@
-import { useCallback } from 'react';
 import { FlatList, View, type ListRenderItem } from 'react-native';
 import { PostCard } from '@/components/post/post-card';
 import type { Post } from '@/components/post/types';
