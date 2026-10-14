@@ -19,7 +19,7 @@ export default function RootLayout() {
   return (
     <SafeAreaProvider>
       <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
-        <View className="flex-1" style={{ position: 'relative' }}>
+        <View className="flex-1">
           <Stack screenOptions={{ headerShown: false }} />
           <CollapsedWorkout />
         </View>

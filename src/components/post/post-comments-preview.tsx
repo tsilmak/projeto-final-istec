@@ -1,5 +1,4 @@
 import { Text } from '@/components/ui/text';
-import { useThemeColors } from '@/lib/theme';
 import { Pressable, View } from 'react-native';
 import type { PostComment } from './types';
 
@@ -14,7 +13,6 @@ export const PostCommentsPreview = ({
   totalCount,
   onViewAll,
 }: PostCommentsPreviewProps) => {
-  const colors = useThemeColors();
   const total = totalCount ?? comments.length;
   const visibleComments = comments.slice(0, 2);
   const remainingCount = Math.max(0, total - visibleComments.length);
@@ -28,18 +26,14 @@ export const PostCommentsPreview = ({
           accessibilityRole="button"
           accessibilityLabel={`Ver os ${remainingCount} comentários restantes`}
           onPress={onViewAll}>
-          <Text className="text-sm" style={{ color: colors.mutedForeground }}>
+          <Text className="text-sm text-muted-foreground">
             Ver os {remainingCount} comentários restantes
           </Text>
         </Pressable>
       )}
 
       {visibleComments.map((comment) => (
-        <Text
-          key={comment.id}
-          className="text-sm"
-          numberOfLines={2}
-          style={{ color: colors.foreground }}>
+        <Text key={comment.id} className="text-sm text-muted-foreground" numberOfLines={2}>
           <Text className="font-semibold">{comment.author} </Text>
           {comment.text}
         </Text>

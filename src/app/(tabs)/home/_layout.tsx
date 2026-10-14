@@ -20,15 +20,12 @@ export default function RouteLayout() {
         <Stack.Screen
           name="index"
           options={{
-            headerShown: true,
-            headerTitleAlign: 'center',
             headerShadowVisible: false,
-
             headerTitle: () => (
               <MenuView
                 key={menuKey}
                 title="Escolhe o feed"
-                actions={(['Amigos', 'Ginásio'] as const).map((feed) => ({
+                actions={['Amigos', 'Ginásio'].map((feed) => ({
                   id: feed,
                   title: feed,
                   state: feed === activeFeed ? 'on' : 'off',

@@ -14,17 +14,14 @@ export default function HomeScreen() {
 
   const feedPosts = activeFeed === 'Amigos' ? posts : [];
 
-  const renderItem: ListRenderItem<Post> = useCallback(
-    ({ item }) => (
-      <PostCard
-        post={item}
-        onFollow={onFollow}
-        onLike={onLike}
-        onComment={onComment}
-        onMenuAction={onMenuAction}
-      />
-    ),
-    [onFollow, onLike, onComment, onMenuAction]
+  const renderItem: ListRenderItem<Post> = ({ item }) => (
+    <PostCard
+      post={item}
+      onFollow={onFollow}
+      onLike={onLike}
+      onComment={onComment}
+      onMenuAction={onMenuAction}
+    />
   );
 
   return (
