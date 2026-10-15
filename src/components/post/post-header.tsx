@@ -39,7 +39,7 @@ export const PostHeader = ({
   onFollow,
   onMenuAction,
 }: PostHeaderProps) => {
-  const { mutedForeground } = useThemeColors();
+  const colors = useThemeColors();
 
   return (
     <View className="flex-row items-center gap-3 px-4 py-3.5">
@@ -86,13 +86,9 @@ export const PostHeader = ({
           },
         ]}
         onPressAction={(e) => onMenuAction(e.nativeEvent.event as PostMenuAction)}>
-        <View
-          accessible
-          accessibilityRole="button"
-          accessibilityLabel="Mais opções"
-          className="h-10 w-10 items-center justify-center rounded-full">
-          <Ionicons name="ellipsis-horizontal" size={24} color={mutedForeground} />
-        </View>
+        <Button accessibilityLabel="Mais opções" variant="ghost" size="icon" className="h-8 w-8">
+          <Ionicons name="ellipsis-horizontal" size={24} color={colors.foreground} />
+        </Button>
       </MenuView>
     </View>
   );

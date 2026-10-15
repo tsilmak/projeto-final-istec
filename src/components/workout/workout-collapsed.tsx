@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { View } from 'react-native';
+import { Alert, View } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useThemeColors } from '@/lib/theme';
@@ -30,6 +30,14 @@ export default function CollapsedWorkout({ nextExercise = 'Próximo exercício',
   const workoutStartedAt = startedAt ?? mountedAt;
   const elapsed = formatElapsed(Math.max(0, Math.floor((now - workoutStartedAt) / 1000)));
   const { destructiveForeground } = useThemeColors();
+
+  const handleStopWorkout = () => {
+    Alert.alert('Parar treino', 'Tens a certeza que desejas parar o treino atual?', [
+      { text: 'Cancelar', style: 'cancel' },
+      { text: 'Parar', style: 'destructive' },
+    ]);
+  };
+
   useEffect(() => {
     const interval = setInterval(() => setNow(Date.now()), 1000);
     return () => clearInterval(interval);
@@ -54,7 +62,11 @@ export default function CollapsedWorkout({ nextExercise = 'Próximo exercício',
       <View
         pointerEvents="box-none"
         className="absolute inset-0 flex-row items-center justify-end px-4">
-        <Button variant="destructive" size="icon" className="rounded-full">
+        <Button
+          variant="destructive"
+          size="icon"
+          className="rounded-full"
+          onPress={handleStopWorkout}>
           <Ionicons name="close" size={22} color={destructiveForeground} />
         </Button>
       </View>

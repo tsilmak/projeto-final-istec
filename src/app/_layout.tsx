@@ -4,7 +4,7 @@ import { DarkTheme, DefaultTheme, Stack, ThemeProvider } from 'expo-router';
 import { useColorScheme } from 'nativewind';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 
-import CollapsedWorkout from '@/components/workout/collapsed-workout';
+import CollapsedWorkout from '@/components/workout/workout-collapsed';
 import '../../global.css';
 
 export default function RootLayout() {
