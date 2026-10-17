@@ -1,8 +1,15 @@
+import { useActiveWorkoutStore } from '@/store/useActiveWorkoutStore';
+import { usePathname } from 'expo-router';
 import { NativeTabs } from 'expo-router/unstable-native-tabs';
 
 export default function Navbar() {
+  const pathname = usePathname();
+  const workoutId = useActiveWorkoutStore((state) => state.workoutId);
+
+  const isDoingAWorkout = workoutId !== null && pathname === `/treino/${workoutId}`;
+
   return (
-    <NativeTabs>
+    <NativeTabs hidden={isDoingAWorkout}>
       <NativeTabs.Trigger name="home">
         <NativeTabs.Trigger.Label>Feed</NativeTabs.Trigger.Label>
         <NativeTabs.Trigger.Icon sf="house.fill" md="home" />

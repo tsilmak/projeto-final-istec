@@ -7,6 +7,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { MenuView } from '@expo/ui/community/menu';
 import { Icon } from '@expo/ui';
 import { Workout } from './types';
+import { useActiveWorkoutStore } from '@/store/useActiveWorkoutStore';
 
 const editIcon = Icon.select({
   ios: 'pencil',
@@ -33,6 +34,7 @@ type WorkoutCardProps = {
 
 export function WorkoutCard({ workout, onEdit, onDuplicate, onDelete, onStart }: WorkoutCardProps) {
   const colors = useThemeColors();
+  const isActive = useActiveWorkoutStore((s) => s.workoutId === workout.id);
 
   const handleMenuAction = (action: string) => {
     switch (action) {
@@ -129,9 +131,9 @@ export function WorkoutCard({ workout, onEdit, onDuplicate, onDelete, onStart }:
           variant="default"
           size="lg"
           className="flex-1"
-          accessibilityLabel={`Iniciar treino ${workout.name}`}
+          accessibilityLabel={`${isActive ? 'Continuar' : 'Iniciar'} Treino ${workout.name}`}
           onPress={() => onStart?.(workout)}>
-          <Text className="text-base">Iniciar treino</Text>
+          <Text className="text-base">{isActive ? 'Continuar Treino' : 'Iniciar Treino'}</Text>
           <Ionicons name="play" size={18} color={colors.background} />
         </Button>
       </CardFooter>
